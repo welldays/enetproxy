@@ -76,6 +76,7 @@ int http::handler(sb_Event* evt)
 				sb_send_header(evt->stream, "Accept-Ranges", "bytes");
 				PRINT("file served\n");
 				sb_write(evt->stream, content, size);
+				free(content);
 			}
 			else {
 				PRINT("failed to serve file\n");
