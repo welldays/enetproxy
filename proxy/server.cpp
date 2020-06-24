@@ -253,8 +253,8 @@ void server::disconnect(bool reset) {
     if (reset) {
         m_user = 0;
         m_token = 0;
-        m_server = "213.179.209.168";
-        m_port = 17276;
+        m_server = "209.59.191.76";
+        m_port = 17093;
     }
 }
 
@@ -326,7 +326,6 @@ void server::send(bool client, variantlist_t& list, int32_t netid, int32_t delay
     update_packet->m_data_size = data_size;
     memcpy(&game_packet->m_data, update_packet, sizeof(gameupdatepacket_t) + data_size);
     free(update_packet);
-    free(data);
 
     auto packet = enet_packet_create(game_packet, data_size + sizeof(gameupdatepacket_t), ENET_PACKET_FLAG_RELIABLE);
     enet_peer_send(peer, 0, packet);
