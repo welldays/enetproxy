@@ -6,6 +6,8 @@
 
 Ayyware for gt at this point 
 
+Anyone using or selling "fixed proxy" is a human failure
+
 ## How to use
 * Does not need separate http server
 * Use HxD or similar to edit "growtopia1.com" and "growtopia2.com" to "localhost" In growtopia binary.
