@@ -4,6 +4,8 @@
 
 ## Don't add me in discord for help with compiling/adding feature/some simple thing with proxy or you will get instantly blocked
 
+Ayyware for gt at this point 
+
 ## How to use
 * Does not need separate http server
 * Use HxD or similar to edit "growtopia1.com" and "growtopia2.com" to "localhost" In growtopia binary.
@@ -26,9 +28,7 @@
 * Works with subserver switching
 
 ## TODO
-* Support more gamepacket types
-* More commands
-* send set state to change gravity, speed, other things
+* Delete this
 
 ## Changelog
 
