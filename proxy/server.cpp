@@ -202,8 +202,6 @@ bool server::start() {
 
 void server::quit() {
     gt::in_game = false;
-    enet_host_destroy(m_real_server);
-    m_real_server = nullptr;
     this->disconnect(true);
 }
 
@@ -249,6 +247,8 @@ void server::disconnect(bool reset) {
     if (m_server_peer) {
         enet_peer_disconnect(m_server_peer, 0);
         m_server_peer = nullptr;
+        enet_host_destroy(m_real_server);
+        m_real_server = nullptr;
     }
     if (reset) {
         m_user = 0;

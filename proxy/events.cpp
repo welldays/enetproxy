@@ -49,7 +49,7 @@ bool events::out::generictext(std::string packet) {
         auto chat = var.get(1).m_values[1];
 
         if (find_command(chat, "name ")) { //ghetto solution, but too lazy to make a framework for commands.
-            std::string name = "`2" + chat.substr(6);
+            std::string name = "``" + chat.substr(6) + "``";
             variantlist_t va{ "OnNameChanged" };
             va[1] = name;
             g_server->send(true, va, world.local.netid, -1);
