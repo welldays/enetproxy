@@ -100,6 +100,11 @@ bool events::out::generictext(std::string packet) {
                 }
             }
             return true;
+        } else if (find_command(chat, "warp ")) {
+            std::string name = chat.substr(6);
+            gt::send_log("`7Warping to " + name);
+            g_server->send(false, "action|join_request\nname|" + name, 3);
+            return true;
         } else if (find_command(chat, "skin ")) {
             int skin = atoi(chat.substr(6).c_str());
             variantlist_t va{ "OnChangeSkin" };
