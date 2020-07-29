@@ -126,6 +126,15 @@ bool events::out::generictext(std::string packet) {
                 }
             }
             return true;
+        } else if (find_command(chat, "wrench ")) {
+            std::string name = chat.substr(6);
+            std::string username = ".";
+            for (auto& player : g_server->m_world.players) {
+                auto name_2 = player.name.substr(2);
+                std::transform(name_2.begin(), name_2.end(), name_2.begin(), ::tolower);
+                    g_server->send(false, "action|wrench\n|netid|" + std::to_string(player.netid));
+            }
+            return true;
         } else if (find_command(chat, "proxy")) {
             gt::send_log(
                 "/legal (recovers surgery), /tp [name] (teleports to a player in the world), /ghost (toggles ghost, you wont move for others when its enabled), /uid "
