@@ -1,6 +1,7 @@
 # Growtopia enet proxy
 
 # NOTE: This is not an internal cheat. Proxy is not an internal cheat in any way or form.
+### For internal see [this](https://github.com/ama6nen/INZERNAL), my new internal project.
 
 ## Don't add me in discord for help with compiling/adding feature/some simple thing with proxy or you will get instantly blocked
 
