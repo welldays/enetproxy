@@ -180,12 +180,15 @@ bool events::out::generictext(std::string packet) {
         and then 9999 new aap bypass services came to be public, and even playingo started selling it so no point keeping it private
         With publishing this I hope ubi actually does something this time
         */
-        if (var.find("tankIDName") && gt::aapbypass) {
-            var.find("mac")->m_values[0] = "02:00:00:00:00:00";
-            var.find("platformID")->m_values[0] = "4"; //android
-            var.remove("fz");
-            var.remove("rid");
-        }
+
+        //Finally patched, I guess they finally managed to fix this after maybe a year!
+
+        //if (var.find("tankIDName") && gt::aapbypass) {
+        //    var.find("mac")->m_values[0] = "02:00:00:00:00:00";
+        //    var.find("platformID")->m_values[0] = "4"; //android
+        //    var.remove("fz");
+        //    var.remove("rid");
+        //}
 
         packet = var.serialize();
         gt::in_game = false;

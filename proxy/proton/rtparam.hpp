@@ -22,7 +22,8 @@ class rtvar {
         static pair parse(std::string str) {
             pair ret{};
             if (!str.length()) { // we dont want to parse empty string so m_pairs vector wont make the app crash
-                ret.append("empty");
+                ret.m_value.append("[EMPTY]");
+                ret.m_values.push_back("[EMPTY]");
                 return ret;
             }
             std::string token;

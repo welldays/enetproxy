@@ -4,13 +4,12 @@
 #include "server.h"
 #include "utils.h"
 
-std::string gt::version = "3.44";
+std::string gt::version = "3.57";
 std::string gt::flag = "ch";
 bool gt::resolving_uid2 = false;
 bool gt::connecting = false;
 bool gt::in_game = false;
 bool gt::ghost = false;
-bool gt::aapbypass = true;
 
 void gt::send_log(std::string text) {
     g_server->send(true, "action|log\nmsg|" + text, NET_MESSAGE_GAME_MESSAGE);
