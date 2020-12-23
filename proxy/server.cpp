@@ -187,6 +187,7 @@ bool server::start() {
     enet_address_set_host(&address, "0.0.0.0");
     address.port = m_proxyport;
     m_proxy_server = enet_host_create(&address, 1024, 10, 0, 0);
+    m_proxy_server->usingNewPacket = false;
 
     if (!m_proxy_server) {
         PRINTS("failed to start the proxy server!\n");
@@ -207,6 +208,7 @@ void server::quit() {
 
 bool server::setup_client() {
     m_real_server = enet_host_create(0, 1, 2, 0, 0);
+    m_real_server->usingNewPacket = true;
     if (!m_real_server) {
         PRINTC("failed to start the client\n");
         return false;
