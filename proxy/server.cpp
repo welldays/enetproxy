@@ -256,7 +256,7 @@ void server::disconnect(bool reset) {
         m_user = 0;
         m_token = 0;
         m_server = "213.179.209.168";
-        m_port = 17275;
+        m_port = 17198;
     }
 }
 
