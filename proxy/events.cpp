@@ -105,6 +105,21 @@ bool events::out::generictext(std::string packet) {
             gt::send_log("`7Warping to " + name);
             g_server->send(false, "action|join_request\nname|" + name, 3);
             return true;
+           } else if (find_command(chat, "pullall")) {
+            std::string username = chat.substr(6);
+            for (auto& player : g_server->m_world.players) {
+                auto name_2 = player.name.substr(2); //remove color
+                if (name_2.find(username)) {
+                    g_server->send(false, "action|wrench\n|netid|" + std::to_string(player.netid));
+                    Sleep(5);
+                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + std::to_string(player.netid) + "|\nbuttonClicked|pull"); 
+                    // You Can |kick |trade |worldban 
+                    Sleep(5);
+                    gt::send_log("Pulled");
+                  
+                }
+            }
+            return true;
         } else if (find_command(chat, "skin ")) {
             int skin = atoi(chat.substr(6).c_str());
             variantlist_t va{ "OnChangeSkin" };
