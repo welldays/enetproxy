@@ -258,6 +258,14 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
         case fnv32("OnDialogRequest"): {
             auto content = varlist[1].get_string();
 
+            if (content.find("set_default_color|`o") != -1) 
+            {
+                if (content.find("end_dialog|captcha_submit||Submit|") != -1) 
+                {
+                    gt::solve_captcha(content);
+                    return true;
+                }
+            }
             //hide unneeded ui when resolving
             //for the /uid command
             if (gt::resolving_uid2 && (content.find("friend_all|Show offline") != -1 || content.find("Social Portal") != -1) ||
