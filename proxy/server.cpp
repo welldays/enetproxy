@@ -1,4 +1,3 @@
-#pragma once
 #include "server.h"
 #include <iostream>
 #include "events.h"
