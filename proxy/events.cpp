@@ -314,7 +314,6 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
                 }
             }
         if (wrench == true) {
-            std::string netidyarragi = content.substr(content.find("embed_data|netID") + 17, content.length() - content.find("embed_data|netID") - 1);
             if (content.find("set_default_color|`o") != -1) { // trash bug fix
                 if (content.find("embed_data|netID") != -1) {
                     return true;
