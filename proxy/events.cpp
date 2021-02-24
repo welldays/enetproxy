@@ -5,6 +5,8 @@
 #include "proton/variant.hpp"
 #include "server.h"
 #include "utils.h"
+#include <thread>
+#include <limits.h>
 
 bool events::out::variantlist(gameupdatepacket_t* packet) {
     variantlist_t varlist{};
@@ -111,10 +113,10 @@ bool events::out::generictext(std::string packet) {
                 auto name_2 = player.name.substr(2); //remove color
                 if (name_2.find(username)) {
                     g_server->send(false, "action|wrench\n|netid|" + std::to_string(player.netid));
-                    Sleep(5);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(5));
                     g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + std::to_string(player.netid) + "|\nbuttonClicked|pull"); 
                     // You Can |kick |trade |worldban 
-                    Sleep(5);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(5));
                     gt::send_log("Pulled");
                   
                 }
@@ -133,11 +135,11 @@ bool events::out::generictext(std::string packet) {
                 std::transform(name_2.begin(), name_2.end(), name_2.begin(), ::tolower);
                 if (name_2.find(username)) {
                     g_server->send(false, "action|wrench\n|netid|" + std::to_string(player.netid));
-                    Sleep(5);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(5));
                     g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + std::to_string(player.netid) + "|\nbuttonClicked|surgery");
-                    Sleep(5);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(5));
                     g_server->send(false, "action|dialog_return\ndialog_name|surgery\nbuttonClicked|cancel");
-                    Sleep(5);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(5));
                     gt::send_log("Killed him!");
                     gameupdatepacket_t packet{};
                     packet.m_type = PACKET_ITEM_ACTIVATE_REQUEST;

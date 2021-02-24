@@ -1,5 +1,9 @@
-#pragma once
 #include "http.h"
+#include <cstring>
+
+#ifndef _WIN32
+#define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename),  (mode)))==NULL
+#endif
 
 sb_Options options;
 sb_Server* http_server;
@@ -48,7 +52,7 @@ uint8_t* read_file(const char* file, uint32_t* size) {
 	return NULL;
 }
 
-#define PRINT(msg, ...) printf("[HTTP]: " msg, __VA_ARGS__);
+#define PRINT(msg, ...) printf("[HTTP]: " msg, ##__VA_ARGS__);
 
 int http::handler(sb_Event* evt)
 {
@@ -116,8 +120,7 @@ void util_sleep(int32_t ms) {
 #endif
 
 }
-void http::run(std::string dest, std::string port2)
-{
+void http::run(std::string dest, std::string port2) {
 	ip = dest;
 	port = port2;
 	start();

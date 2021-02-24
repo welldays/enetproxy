@@ -1,4 +1,3 @@
-#pragma once
 #include <ctime>
 #include <iomanip>
 #include <iostream>
@@ -16,16 +15,20 @@ int main() {
 #endif
     printf("enet proxy by ama\n");
 
+
+    // this causes seg fault on linux idk.........
+#ifdef _WIN32
     std::thread http(http::run, "127.0.0.1", "17191");
     http.detach();
     printf("HTTP server is running.\n");
+#endif
 
     enet_initialize();
     if (g_server->start()) {
         printf("Server & client proxy is running.\n");
         while (true) {
             g_server->poll();
-            Sleep(1);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
     }   
     else
