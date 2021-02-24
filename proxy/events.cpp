@@ -40,7 +40,23 @@ bool events::out::generictext(std::string packet) {
     rtvar var = rtvar::parse(packet);
     if (!var.valid())
         return false;
-
+        if (wrench == true) {
+            if (packet.find("action|wrench") != -1) {
+                g_server->send(false, packet);
+                std::string sr = packet.substr(packet.find("netid|") + 6, packet.length() - packet.find("netid|") - 1);
+                std::string motion = sr.substr(0, sr.find("|"));
+                if (mode.find("pull") != -1) {
+                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|pull");
+                }
+                if (mode.find("kick") != -1) {
+                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|kick");
+                }
+                if (mode.find("ban") != -1) {
+                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|worldban");
+                }
+                return true;
+            }
+        }
     if (var.get(0).m_key == "action" && var.get(0).m_value == "input") {
         if (var.size() < 2)
             return false;
@@ -51,23 +67,6 @@ bool events::out::generictext(std::string packet) {
             return false;
 
         auto chat = var.get(1).m_values[1];
-        if (wrench == true) {
-            if (packet.find("action|wrench") != -1) {
-                g_server->send(false, packet);
-                std::string sr = packet.substr(packet.find("netid|") + 6, packet.length() - packet.find("netid|") - 1);
-                std::string motion = sr.substr(0, sr.find("|"));
-                if (mode == "kick") {
-                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|pull");
-                }
-                if (mode == "pull") {
-                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|kick");
-                }
-                if (mode == "`ban") {
-                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|worldban");
-                }
-                return true;
-            }
-        }
         if (find_command(chat, "name ")) { //ghetto solution, but too lazy to make a framework for commands.
             std::string name = "``" + chat.substr(6) + "``";
             variantlist_t va{ "OnNameChanged" };
