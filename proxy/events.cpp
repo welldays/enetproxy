@@ -308,9 +308,9 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
                 }
             }
         if (wrench == true) {
-            if (content.find("set_default_color|`o") != -1) { // trash bug fix
+            if (content.find("add_button|report_player|`wReport Player``|noflags|0|0|") != -1) {
                 if (content.find("embed_data|netID") != -1) {
-                    return true;
+                    return true; // block wrench dialog
                 }
             }
         }            
