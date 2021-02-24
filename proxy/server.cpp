@@ -120,6 +120,12 @@ void server::handle_incoming() {
                                 break;
 
                             switch (packet->m_type) {
+                    case 8: {
+                        if (!packet->m_int_data) {
+                            std::string dice_roll = std::to_string(packet->m_count + 1);
+                            gt::send_log("`bThe dice `bwill roll a `#" + dice_roll);
+                        }
+                    }break;                                    
                                 case PACKET_CALL_FUNCTION:
                                     if (events::in::variantlist(packet)) {
                                         enet_packet_destroy(event.packet);
