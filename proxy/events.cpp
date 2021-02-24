@@ -32,6 +32,8 @@ bool find_command(std::string chat, std::string name) {
         gt::send_log("`6" + chat);
     return found;
 }
+bool wrench = false; 
+std::string mode = "pull";
 bool events::out::generictext(std::string packet) {
     PRINTS("Generic text: %s\n", packet.c_str());
     auto& world = g_server->m_world;
@@ -49,7 +51,23 @@ bool events::out::generictext(std::string packet) {
             return false;
 
         auto chat = var.get(1).m_values[1];
-
+        if (wrench == true) {
+            if (packet.find("action|wrench") != -1) {
+                g_server->send(false, packet);
+                std::string sr = packet.substr(packet.find("netid|") + 6, packet.length() - packet.find("netid|") - 1);
+                std::string motion = sr.substr(0, sr.find("|"));
+                if (mode == "kick") {
+                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|pull");
+                }
+                if (mode == "pull") {
+                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|kick");
+                }
+                if (mode == "`ban") {
+                    g_server->send(false, "action|dialog_return\ndialog_name|popup\nnetID|" + motion + "|\nnetID|" + motion + "|\nbuttonClicked|worldban");
+                }
+                return true;
+            }
+        }
         if (find_command(chat, "name ")) { //ghetto solution, but too lazy to make a framework for commands.
             std::string name = "``" + chat.substr(6) + "``";
             variantlist_t va{ "OnNameChanged" };
@@ -79,7 +97,21 @@ bool events::out::generictext(std::string packet) {
             gt::flag = cy;
             gt::send_log("your country set to " + cy + ", (Relog to game to change it successfully!)");
             return true;
-        } else if (find_command(chat, "uid ")) {
+        } 
+        else if (find_command(chat, "wrenchset ")) {
+            mode = chat.substr(10);
+            gt::send_log("Wrench mode set to " + mode);
+            return true;        
+        }
+        else if (find_command(chat, "wrenchmode")) {
+            wrench = !wrench;
+            if (wrench)
+                gt::send_log("Wrench mode is on.");
+            else
+                gt::send_log("Wrench mode is off.");
+            return true;
+        }
+        else if (find_command(chat, "uid ")) {
             std::string name = chat.substr(5);
             gt::send_log("resolving uid for " + name);
             g_server->send(false, "action|input\n|text|/ignore /" + name);
@@ -276,6 +308,13 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
                     return true;
                 }
             }
+        if (wrench == true) {
+            if (content.find("set_default_color|`o") != -1) { // trash bug fix
+                if (content.find("embed_data|netID") != -1) {
+                    return true;
+                }
+            }
+        }            
             //hide unneeded ui when resolving
             //for the /uid command
             if (gt::resolving_uid2 && (content.find("friend_all|Show offline") != -1 || content.find("Social Portal") != -1) ||
