@@ -32,7 +32,9 @@ bool find_command(std::string chat, std::string name) {
         gt::send_log("`6" + chat);
     return found;
 }
-bool wrench = false; 
+bool wrench = false;
+bool fastdrop = false;
+bool fasttrash = false;
 std::string mode = "pull";
 bool events::out::generictext(std::string packet) {
     PRINTS("Generic text: %s\n", packet.c_str());
@@ -96,7 +98,23 @@ bool events::out::generictext(std::string packet) {
             gt::flag = cy;
             gt::send_log("your country set to " + cy + ", (Relog to game to change it successfully!)");
             return true;
-        } 
+        }
+        else if (find_command(chat, "fd")) {
+            fastdrop = !fastdrop;
+            if (fastdrop)
+                gt::send_log("Fast Drop is now enabled.");
+            else
+                gt::send_log("Fast Drop is now disabled.");
+            return true;
+        }
+        else if (find_command(chat, "ft")) {
+            fasttrash = !fasttrash;
+            if (fasttrash)
+                gt::send_log("Fast Trash is now enabled.");
+            else
+                gt::send_log("Fast Trash is now disabled.");
+            return true;
+        }        
         else if (find_command(chat, "wrenchset ")) {
             mode = chat.substr(10);
             gt::send_log("Wrench mode set to " + mode);
@@ -291,6 +309,28 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
             if (content.find("add_button|report_player|`wReport Player``|noflags|0|0|") != -1) {
                 if (content.find("embed_data|netID") != -1) {
                     return true; // block wrench dialog
+                }
+            }
+        }
+        if (fastdrop == true) {
+            std::string itemid = content.substr(content.find("embed_data|itemID|") + 18, content.length() - content.find("embed_data|itemID|") - 1);
+            std::string count = content.substr(content.find("count||") + 7, content.length() - content.find("count||") - 1);
+            if (content.find("embed_data|itemID|") != -1) {
+                if (content.find("Drop") != -1) {
+                    g_server->send(false, "action|dialog_return\ndialog_name|drop_item\nitemID|" + itemid + "|\ncount|" + count);
+                    return true;
+                }
+            }
+        }
+        if (fasttrash == true) {
+            std::string itemid = content.substr(content.find("embed_data|itemID|") + 18, content.length() - content.find("embed_data|itemID|") - 1);
+            std::string count = content.substr(content.find("you have ") + 9, content.length() - content.find("you have ") - 1);
+            std::string delimiter = ")";
+            std::string token = count.substr(0, count.find(delimiter));
+            if (content.find("embed_data|itemID|") != -1) {
+                if (content.find("Trash") != -1) {
+                    g_server->send(false, "action|dialog_return\ndialog_name|trash_item\nitemID|" + itemid + "|\ncount|" + token);
+                    return true;
                 }
             }
         }            
