@@ -1,6 +1,8 @@
 #include "http.h"
 #include <cstring>
-
+#ifdef __linux__
+#include <unistd.h>
+#endif
 #ifndef _WIN32
 #define fopen_s(pFile,filename,mode) ((*(pFile))=fopen((filename),  (mode)))==NULL
 #endif
@@ -58,13 +60,12 @@ int http::handler(sb_Event* evt)
 {
 	if (evt->type == SB_EV_REQUEST) {
 		PRINT("%s - %s %s\n", evt->address, evt->method, evt->path);
-		if (strstr(evt->path, "/growtopia/server_data.php") != NULL) {
 			PRINT("got server data request.\n");
 			sb_send_status(evt->stream, 200, "OK");
 			sb_send_header(evt->stream, "Content-Type", "text/plain");
 			sb_writef(evt->stream, format(server_data, ip.c_str(), port.c_str(), ip.c_str()).c_str());
-		}
-		else if ((strstr(evt->path, "/game/") != NULL || strstr(evt->path, "/social/") != NULL || strstr(evt->path, "/interface/") != NULL ||
+
+		 if ((strstr(evt->path, "/game/") != NULL || strstr(evt->path, "/social/") != NULL || strstr(evt->path, "/interface/") != NULL ||
 			strstr(evt->path, "/audio/") != NULL) &&
 			strstr(evt->method, "GET") != NULL) {
 			sb_send_status(evt->stream, 200, "OK");
@@ -101,7 +102,20 @@ void http::start()
 {
 	options.handler = handler;
 	options.host = "0.0.0.0";
+#ifdef __linux__
+	if (geteuid() != 0)
+	{
+	PRINT("You are not root user, Running port 8080\n");
+	options.port = "8080";
+	}
+	else
+	{
+	PRINT("You are root user, Running port 80\n");
 	options.port = "80";
+	}
+#elif _WIN32
+	options.port = "80";
+#endif
 	http_server = sb_new_server(&options);
 	if (!http_server) {
 		PRINT("failed to start the http server!\n");
