@@ -17,6 +17,12 @@ class server {
     bool connect();
     void disconnect(bool reset);
    public:
+          struct Item {
+           uint16_t id;
+           uint8_t count;
+           uint8_t type;
+       };
+       static std::vector<server::Item> inventory;
     int m_user = 0;
     int m_token = 0;
     std::string m_server = "213.179.209.168";
