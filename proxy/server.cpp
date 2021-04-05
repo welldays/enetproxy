@@ -1,4 +1,3 @@
-#pragma once
 #include "server.h"
 #include <iostream>
 #include "events.h"
@@ -91,6 +90,7 @@ void server::handle_outgoing() {
         }
     }
 }
+std::vector<server::Item> server::inventory;
 
 void server::handle_incoming() {
     ENetEvent event;
@@ -121,6 +121,23 @@ void server::handle_incoming() {
                                 break;
 
                             switch (packet->m_type) {
+                    case PACKET_SEND_INVENTORY_STATE: {
+                        server::inventory.clear();
+                        auto extended_ptr = utils::get_extended(packet);
+                        inventory.resize(*reinterpret_cast<short*>(extended_ptr + 9));
+                        memcpy(inventory.data(), extended_ptr + 11, server::inventory.capacity() * sizeof(Item));
+                        //for (Item& item : inventory) {
+                        //    std::cout << "Id: "<< (int)item.id << std::endl;
+                        //    std::cout << "Count: "<< (int)item.count << std::endl;
+                        //    std::cout << "type: "<< (int)item.type << std::endl;
+                        //}
+                    }break;                                    
+                    case 8: {
+                        if (!packet->m_int_data) {
+                            std::string dice_roll = std::to_string(packet->m_count + 1);
+                            gt::send_log("`bThe dice `bwill roll a `#" + dice_roll);
+                        }
+                    }break;                                    
                                 case PACKET_CALL_FUNCTION:
                                     if (events::in::variantlist(packet)) {
                                         enet_packet_destroy(event.packet);

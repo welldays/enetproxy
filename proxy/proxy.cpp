@@ -1,4 +1,3 @@
-#pragma once
 #include <ctime>
 #include <iomanip>
 #include <iostream>
@@ -25,7 +24,7 @@ int main() {
         printf("Server & client proxy is running.\n");
         while (true) {
             g_server->poll();
-            Sleep(1);
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
     }   
     else
