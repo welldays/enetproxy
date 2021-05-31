@@ -131,8 +131,11 @@ bool events::out::generictext(std::string packet) {
         else if (find_command(chat, "uid ")) {
             std::string name = chat.substr(5);
             gt::send_log("resolving uid for " + name);
-            g_server->send(false, "action|input\n|text|/ignore /" + name);
+            g_server->send(false, "action|input\n|text|/ignore " + name);
             g_server->send(false, "action|friends");
+            g_server->send(false, "action|dialog_return\ndialog_name|playerportal\nbuttonClicked|socialportal");
+            g_server->send(false, "action|dialog_return\ndialog_name|friends_guilds\nbuttonClicked|showfriend");
+            g_server->send(false, "action|dialog_return\ndialog_name|friends\nbuttonClicked|friend_all");
             gt::resolving_uid2 = true;
             return true;
         } else if (find_command(chat, "tp ")) {
@@ -336,12 +339,7 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
         }            
             //hide unneeded ui when resolving
             //for the /uid command
-            if (gt::resolving_uid2 && (content.find("friend_all|Show offline") != -1 || content.find("Social Portal") != -1) ||
-                content.find("Are you sure you wish to stop ignoring") != -1) {
-                return true;
-            } else if (gt::resolving_uid2 && content.find("Ok, you will now be able to see chat") != -1) {
-                gt::resolving_uid2 = false;
-                return true;
+
             } else if (gt::resolving_uid2 && content.find("`4Stop ignoring") != -1) {
                 int pos = content.rfind("|`4Stop ignoring");
                 auto ignore_substring = content.substr(0, pos);
