@@ -336,7 +336,7 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
                     return true;
                 }
             }
-        }            
+            
             //hide unneeded ui when resolving
             //for the /uid command
 
