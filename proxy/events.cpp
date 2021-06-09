@@ -8,6 +8,27 @@
 #include <thread>
 #include <limits.h>
 
+static const char pool[] = "iIliIliIl1234567890"; //random string for change fast name
+int poolSize = sizeof(pool) - 1;
+char getRandomChar()
+{ return pool[rand() % poolSize]; }
+std::string randomstring()
+{
+    while (true) {
+        int passLength = 18;
+        int numberofrandom = 1;
+        srand(time(0));
+        std::string random;
+        for (int j = 0; j < numberofrandom; j++) {
+            for (int i = 0; i < passLength; i++) {
+                random += getRandomChar();
+            }
+            return random;
+        }
+    }
+}
+
+
 bool events::out::variantlist(gameupdatepacket_t* packet) {
     variantlist_t varlist{};
     varlist.serialize_from_mem(utils::get_extended(packet));
@@ -32,9 +53,11 @@ bool find_command(std::string chat, std::string name) {
         gt::send_log("`6" + chat);
     return found;
 }
+bool fastname = false;
 bool wrench = false;
 bool fastdrop = false;
 bool fasttrash = false;
+
 std::string mode = "pull";
 bool events::out::generictext(std::string packet) {
     PRINTS("Generic text: %s\n", packet.c_str());
@@ -97,6 +120,14 @@ bool events::out::generictext(std::string packet) {
             std::string cy = chat.substr(9);
             gt::flag = cy;
             gt::send_log("your country set to " + cy + ", (Relog to game to change it successfully!)");
+            return true;
+        }
+        else if (find_command(chat, "fn")) {
+            fastname = !fastname;
+            if (fastname)
+                gt::send_log("Fast Name Change is now enabled.");
+            else
+                gt::send_log("Fast Name Change is now disabled.");
             return true;
         }
         else if (find_command(chat, "fd")) {
@@ -306,6 +337,15 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
                 {
                     gt::solve_captcha(content);
                     return true;
+                }
+                if (fastname == true) 
+                {
+                randomstring();
+                if (content.find("end_dialog|name_change|Cancel|Change it!|") != -1) {
+                    g_server->send(false, "action|dialog_return\ndialog_name|name_change\nname_box|" + randomstring() + "|\nokay|1|");
+                    g_server->send(false, "end_dialog|growid_apply|Continue||");
+                    return true;
+                    }
                 }
             }
         if (wrench == true) {
