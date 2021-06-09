@@ -340,7 +340,6 @@ bool events::in::variantlist(gameupdatepacket_t* packet) {
                 }
                 if (fastname == true) 
                 {
-                randomstring();
                 if (content.find("end_dialog|name_change|Cancel|Change it!|") != -1) {
                     g_server->send(false, "action|dialog_return\ndialog_name|name_change\nname_box|" + randomstring() + "|\nokay|1|");
                     g_server->send(false, "end_dialog|growid_apply|Continue||");
